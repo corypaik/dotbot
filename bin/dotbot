@@ -17,6 +17,7 @@ exit 1
 # python code
 
 import sys, os
+import glob
 
 PROJECT_ROOT_DIRECTORY = os.path.dirname(
     os.path.dirname(os.path.realpath(__file__)))
@@ -26,8 +27,10 @@ def inject(lib_path):
     sys.path.insert(0, path)
 
 # version dependent libraries
-if sys.version_info[0] >= 3:
-    inject('pyyaml/lib3')
+py3_use_lib3 = any(
+   glob.glob(os.path.join(PROJECT_ROOT_DIRECTORY, 'lib/pyyaml/lib3/**/*.py')))
+if sys.version_info[0] >= 3 and py3_use_lib3:
+    lib3_exists = inject('pyyaml/lib3')
 else:
     inject('pyyaml/lib')
 
